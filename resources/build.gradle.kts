@@ -1,21 +1,15 @@
-import Libs.androidTestImplementations
-import Libs.debugImplementations
-import Libs.implementations
-import Libs.kapts
-import Libs.testImplementations
-
 plugins {
-    kotlin("kapt")
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
     namespace = "com.zerosword.resources"
-    compileSdk = AppConfig.compileSdkVer
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = AppConfig.minSdkVer
+        minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -31,8 +25,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = AppConfig.javaVersion
-        targetCompatibility = AppConfig.javaVersion
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
     }
 
     buildFeatures {
@@ -40,11 +34,11 @@ android {
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = AppConfig.kotlinCompilerExtVer
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
     kotlinOptions {
-        jvmTarget = AppConfig.jvmTargetVer
+        jvmTarget = libs.versions.jvmTarget.get()
     }
 }
 
@@ -53,46 +47,24 @@ kapt {
 }
 
 dependencies {
+    implementation(platform(libs.compose.bom))
+    implementation(libs.core.ktx)
+    implementation(libs.retrofit)
+    implementation(libs.activity.compose)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.material3)
 
-    implementations(
-        listOf(
-            platform(Libs.composeBom),
-            Libs.coreKtx,
-            Libs.retrofit,
-            Libs.activityCompose,
-            Libs.composeUi,
-            Libs.composeUiGraphics,
-            Libs.composeUiToolingPreview,
-            Libs.material3,
-        )
-    )
+    kapt(libs.hilt.compiler)
 
-    kapts(
-        listOf(
-            Libs.hiltCompiler
-        )
-    )
+    testImplementation(libs.junit)
 
-    testImplementations(
-        listOf(
-            Libs.junit,
-        )
-    )
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.compose.ui.test.junit4)
 
-    androidTestImplementations(
-        listOf(
-            platform(Libs.composeBom),
-            Libs.androidxTestJunit,
-            Libs.androidxEspressoCore,
-            Libs.composeUiTestJunit,
-        )
-    )
-
-    debugImplementations(
-        listOf(
-            Libs.composeUiTooling,
-            Libs.composeUiTestManifest
-        )
-    )
-
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
 }

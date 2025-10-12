@@ -1,22 +1,16 @@
-import Libs.androidTestImplementations
-import Libs.implementations
-import Libs.kaptAndroidTests
-import Libs.kapts
-import Libs.testImplementations
-
 plugins {
-    kotlin("kapt")
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
     namespace = "com.zerosword.domain"
-    compileSdk = AppConfig.compileSdkVer
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = AppConfig.minSdkVer
+        minSdk = libs.versions.minSdk.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -35,11 +29,11 @@ android {
         buildConfig = true
     }
     compileOptions {
-        sourceCompatibility = AppConfig.javaVersion
-        targetCompatibility = AppConfig.javaVersion
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
     }
     kotlinOptions {
-        jvmTarget = AppConfig.jvmTargetVer
+        jvmTarget = libs.versions.jvmTarget.get()
     }
 }
 
@@ -48,38 +42,17 @@ kapt {
 }
 
 dependencies {
+    implementation(libs.core.ktx)
+    implementation(libs.hilt.android)
 
-    implementations(
-        listOf(
-            Libs.coreKtx,
-            Libs.hilt
-        )
-    )
+    kapt(libs.hilt.compiler)
 
-    kapts(
-        listOf(
-            Libs.hiltCompiler
-        )
-    )
+    testImplementation(libs.junit)
+    testImplementation(libs.hilt.android.testing)
 
-    testImplementations(
-        listOf(
-            Libs.junit,
-            Libs.hiltAndroidTest
-        )
-    )
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.hilt.android.testing)
 
-    androidTestImplementations(
-        listOf(
-            Libs.androidxTestJunit,
-            Libs.androidxEspressoCore,
-            Libs.hiltAndroidTest
-        )
-    )
-
-    kaptAndroidTests(
-        listOf(
-            Libs.hiltCompiler
-        )
-    )
+    kaptAndroidTest(libs.hilt.compiler)
 }

@@ -1,28 +1,20 @@
-import Libs.androidTestImplementations
-import Libs.debugImplementations
-import Libs.implementations
-import Libs.kaptAndroidTests
-import Libs.kaptTests
-import Libs.kapts
-import Libs.testImplementations
-
 plugins {
-    kotlin("kapt")
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
     namespace = "com.zerosword.template"
-    compileSdk = AppConfig.compileSdkVer
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.zerosword.template"
-        minSdk = AppConfig.minSdkVer
-        targetSdk = AppConfig.targetSdkVer
-        versionCode = AppConfig.versionCode
-        versionName = AppConfig.versionName
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = libs.versions.appVersionCode.get().toInt()
+        versionName = libs.versions.appVersionName.get()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -40,18 +32,18 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = AppConfig.javaVersion
-        targetCompatibility = AppConfig.javaVersion
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.java.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.java.get())
     }
     kotlinOptions {
-        jvmTarget = AppConfig.jvmTargetVer
+        jvmTarget = libs.versions.jvmTarget.get()
     }
     buildFeatures {
         compose = true
         buildConfig = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = AppConfig.kotlinCompilerExtVer
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
     packaging {
         resources {
@@ -65,79 +57,59 @@ kapt {
 }
 
 dependencies {
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":feature-main"))
+    implementation(project(":resources"))
 
-    implementations(
-        listOf(
-            project(":data"),
-            project(":domain"),
-            project(":feature-main"),
-            project(":resources"),
-            platform(Libs.composeBom),
-            platform(Libs.okHttpClientBom),
-            Libs.coreKtx,
-            Libs.lifecycleRuntimeKtx,
-            Libs.lifecycleForCompose,
-            Libs.lifecycleService,
-            Libs.viewModel,
-            Libs.viewModelForCompose,
-            Libs.viewModelForSavedState,
-            Libs.retrofit,
-            Libs.retrofitGsonConverter,
-            Libs.okHttpClient,
-            Libs.okHttpInterceptor,
-            Libs.sandwich,
-            Libs.sandwichForRetrofit,
-            Libs.activityCompose,
-            Libs.composeUi,
-            Libs.composeUiGraphics,
-            Libs.composeUiToolingPreview,
-            Libs.material3,
-            Libs.glide,
-            Libs.glideForCompose,
-            Libs.hilt
-        )
-    )
+    implementation(platform(libs.compose.bom))
+    implementation(platform(libs.okhttp.bom))
 
-    kapts(
-        listOf(
-            Libs.hiltCompiler,
-            Libs.lifecycleCompiler,
-            Libs.glide
-        )
-    )
-    kaptTests(listOf(Libs.hiltCompiler))
+    implementation(libs.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.lifecycle.runtime.compose)
+    implementation(libs.lifecycle.service)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.viewmodel.compose)
+    implementation(libs.lifecycle.viewmodel.savedstate)
 
-    testImplementations(
-        listOf(
-            Libs.junit,
-            Libs.okHttpMockWebServer,
-            Libs.hiltAndroidTest
-        )
-    )
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.sandwich)
+    implementation(libs.sandwich.retrofit)
 
-    androidTestImplementations(
-        listOf(
-            platform(Libs.composeBom),
-            Libs.androidxTestJunit,
-            Libs.androidxEspressoCore,
-            Libs.composeUiTestJunit,
-            Libs.hiltAndroidTest
-        )
-    )
+    implementation(libs.activity.compose)
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.material3)
 
-    kaptAndroidTests(
-        listOf(
-            Libs.hiltCompiler
-        )
-    )
+    implementation(libs.glide)
+    implementation(libs.glide.compose)
+    implementation(libs.hilt.android)
 
-    debugImplementations(
-        listOf(
-            Libs.composeUiTooling,
-            Libs.composeUiTestManifest
-        )
-    )
+    kapt(libs.hilt.compiler)
+    kapt(libs.lifecycle.compiler)
+    kapt(libs.glide)
 
+    kaptTest(libs.hilt.compiler)
+
+    testImplementation(libs.junit)
+    testImplementation(libs.okhttp.mockwebserver)
+    testImplementation(libs.hilt.android.testing)
+
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.compose.ui.test.junit4)
+    androidTestImplementation(libs.hilt.android.testing)
+
+    kaptAndroidTest(libs.hilt.compiler)
+
+    debugImplementation(libs.compose.ui.tooling)
+    debugImplementation(libs.compose.ui.test.manifest)
 }
 
 
