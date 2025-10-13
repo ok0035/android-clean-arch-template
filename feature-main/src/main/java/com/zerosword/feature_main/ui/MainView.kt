@@ -21,7 +21,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.zerosword.feature_main.viewmodel.MainViewModel
 import com.zerosword.resources.ui.theme.DarkColorScheme
 import com.zerosword.resources.ui.theme.LightColorScheme
@@ -55,7 +55,6 @@ fun MainView(
 @Composable
 fun TemplateTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -64,17 +63,8 @@ fun TemplateTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
-
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
-    }
-    val view = LocalView.current
-    if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
-        }
     }
 
     MaterialTheme(
@@ -83,6 +73,7 @@ fun TemplateTheme(
         content = content
     )
 }
+
 
 @Composable
 fun Greeting(message: String, modifier: Modifier = Modifier) {

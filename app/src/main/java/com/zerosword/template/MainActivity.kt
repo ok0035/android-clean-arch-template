@@ -2,8 +2,11 @@ package com.zerosword.template
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -23,6 +26,19 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // ✅ 시스템 바는 Activity에서 1회 설정
+        // 투명 처리 + 아이콘 밝기 자동 전환
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.auto(
+                /* lightScrim = */ android.graphics.Color.TRANSPARENT,
+                /* darkScrim  = */ android.graphics.Color.TRANSPARENT
+            ),
+            navigationBarStyle = SystemBarStyle.auto(
+                /* lightScrim = */ android.graphics.Color.TRANSPARENT,
+                /* darkScrim  = */ android.graphics.Color.TRANSPARENT
+            )
+        )
+
         super.onCreate(savedInstanceState)
         setContent {
             MainView()

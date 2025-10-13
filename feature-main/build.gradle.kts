@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.hilt.android)
+    alias(libs.plugins.compose.compiler)
+
 }
 
 android {
@@ -76,7 +78,7 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.glide.compose)
     implementation(libs.hilt.android)
-    implementation(libs.hilt.navigation.compose)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel.compose)
 
     kapt(libs.hilt.compiler)
     kapt(libs.lifecycle.compiler)
