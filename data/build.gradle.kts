@@ -67,7 +67,6 @@ dependencies {
     implementation(libs.sandwich)
     implementation(libs.sandwich.retrofit)
     implementation(libs.hilt.android)
-
     kapt(libs.hilt.compiler)
 
     testImplementation(libs.junit)

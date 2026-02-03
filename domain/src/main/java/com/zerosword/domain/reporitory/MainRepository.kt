@@ -1,8 +1,7 @@
 package com.zerosword.domain.reporitory
 
+import kotlinx.coroutines.flow.Flow
+
 interface MainRepository {
-    suspend fun getData(
-        onSuccess: (res: String) -> Unit,
-        onError: (errorMessage: String) -> Unit
-    )
+    fun getData(): Flow<String>
 }
